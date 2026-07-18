@@ -115,16 +115,24 @@ if DEBUG:
     }
 
 else:
+    CONNECTION_STRING = os.environ["CUSTOMCONNSTR_AZURE_POSTGRESQL_CONNECTIONSTRING"]
+
+    conn_str_params = {}
+    for item in CONNECTION_STRING.split(";"):
+        if "=" in item:
+            key, value = item.split("=", 1)
+            conn_str_params[key.strip()] = value.strip()
+
     DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.environ["DB_NAME"],
-        "HOST": os.environ["DB_HOST"],
-        "USER": os.environ["DB_USER"],
-        "PASSWORD": os.environ["DB_PASSWORD"],
-        "PORT": "5432",
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': conn_str_params['Database'],
+            'HOST': conn_str_params['Server'],
+            'USER': conn_str_params['User Id'],
+            'PASSWORD': conn_str_params['Password'],
+            'PORT': '5432',
+        }
     }
-}
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
